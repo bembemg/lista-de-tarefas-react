@@ -1,0 +1,82 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#logo {
+  display: flex;
+  align-items: center;
+
+  & img {
+      width: 5rem;
+  }
+}
+
+.task {
+  display: flex;
+  align-items: center;
+}
+
+ol {
+  counter-reset: item;
+  list-style-type: none;
+}
+
+li {
+  display: flex;
+  border: 1px red solid;
+  align-items: center;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-btn {
+  width: 1rem;
+  cursor: pointer;
+}
+
+.remove-btn {
+  width: 1rem;
+  cursor: pointer;
+}
+
+li::before {
+  content: counter(item) ".";
+  counter-increment: item;
+  font-weight: bold;
+}
+
+.tasks-header {
+  border: 2px blue solid;
+  display: flex;
+  padding-inline: 5rem;
+  gap: 5rem;
+}
+
+#add {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
