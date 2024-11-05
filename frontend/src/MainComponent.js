@@ -14,6 +14,8 @@ function MainComponent() {
     const [edit, setEdit] = useState(null);
     // Variável para exclusão de item
     const [itemToDelete, setItemToDelete] = useState(null);
+    // Variável para mensagem de erro
+    const [errorMessage, setErrorMessage] = useState('');
 
     // Abrir dialog para adicionar item a lista
     const modal = useRef();
@@ -43,22 +45,33 @@ function MainComponent() {
     // Adicionar Task
     const addTask = useCallback(() => {
         if (taskName.trim() !== '' && expense.trim() !== '' && date.trim() !== '') {
-            const  newItem = {
+            // Verifica se já existe uma tarefa com o mesmo nome
+            const tarefaExistente = task.some((item, index) => 
+                // Ignora o item atual sendo editado
+                index !== edit && item.name.toLowerCase() === taskName.trim().toLowerCase()
+            );
+    
+            if (tarefaExistente) {
+                setErrorMessage('Já existe uma tarefa com este nome!');
+                setTimeout(() => {
+                    setErrorMessage('');
+                }, 5000);
+                return;
+            }
+    
+            const newItem = {
                 name: taskName,
                 cost: parseFloat(expense.replace(/\./g, "").replace(",", ".")),
                 limitDate: dayjs(date).format('DD/MM/YYYY')
             };
             
             if (edit !== null) {
-                // Editar task existente
                 const updatedTasks = [...task];
                 updatedTasks[edit] = newItem;
                 setTask(updatedTasks);
             } else {
-                // Adicionar nova task
                 setTask([...task, newItem]);
-            };
-            
+            }
             
             setTaskName('');
             setExpense('');
@@ -66,8 +79,11 @@ function MainComponent() {
             setEdit(null);
             closeModal();
         } else {
-            alert('Preencha todos os campos antes de adicionar.');
-        };
+            setErrorMessage('Preencha todos os campos antes de adicionar.');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
+        }
     }, [taskName, expense, date, edit, closeModal, task]);
     
     // ----------------------------------------
@@ -158,13 +174,14 @@ function MainComponent() {
             list={task}
             setList={setTask}
             animation={200}
-            delay={150} // Tempo em milissegundos para segurar antes de arrastar
-            delayOnTouchOnly={true} // Aplica o delay apenas em dispositivos touch
-            touchStartThreshold={5} // Tolerância de movimento antes de iniciar o arrasto
+            handle=".handle"
+            delay={150}
+            delayOnTouchOnly={true}
+            touchStartThreshold={5}
         >
 
         {task.map((tarefa, index) => (
-            <li key={index}>
+            <li key={index} className={tarefa.cost >= 1000 ? "expensive-task" : ""}>
                 <div className="task"><strong>{tarefa.name}</strong></div>
 
                 <span className="task-expense">{formatBRL(tarefa.cost)}</span>
@@ -185,6 +202,8 @@ function MainComponent() {
                         }} 
                     />
                 </div>
+
+                <div className='handle'>☰</div>
             </li>
         ))}
         </ReactSortable>
@@ -213,6 +232,12 @@ function MainComponent() {
                 <input type="date" className="add-date" maxLength="10"
                 value={date}
                 onChange={handleLimitDateChange}/>
+
+                {errorMessage && (
+                    <div className="error-message">
+                        {errorMessage}
+                    </div>
+                )}
 
                 <button id="btn-add" onClick={addTask}>{edit !== null ? "Salvar" : "Adicionar"}</button>
             </dialog>

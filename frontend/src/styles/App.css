@@ -98,9 +98,14 @@ li::before {
   }
 }
 
-.registers ol li:active,
-.registers ol li.sortable-drag {
-    cursor: grab !important;
+.handle {
+  cursor: grab;
+  padding: 5px;
+  color: #666;
+}
+
+.handle:active {
+  cursor: grabbing;
 }
 
 .sortable-chosen {
@@ -109,4 +114,13 @@ li::before {
 
 .sortable-drag {
     opacity: 0;
+}
+
+.expensive-task {
+  background-color: #fff3cd;
+  transition: background-color 0.3s ease;
+}
+
+.expensive-task:hover {
+  background-color: #ffe7b3;
 }
