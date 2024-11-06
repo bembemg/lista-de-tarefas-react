@@ -1,10 +1,26 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { ReactSortable } from "react-sortablejs";
-import './styles/App.css';
+import '../styles/App.css';
 
+const API_URL = 'http://localhost:3333';
 
 function MainComponent() {
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+    
+    const fetchTasks = async () => {
+        try {
+            const response = await fetch(`${API_URL}/tasks`);
+            const data = await response.json();
+            setTask(data);
+        } catch (error) {
+            console.error("Erro ao buscar tarefas!", error);
+        }
+    }
+
     // Variáveis para criação de itens
     const [task, setTask] = useState([]);
     const [taskName, setTaskName] = useState('');
@@ -43,7 +59,7 @@ function MainComponent() {
     }, []);
         
     // Adicionar Task
-    const addTask = useCallback(() => {
+    const addTask = async () => {
         if (taskName.trim() !== '' && expense.trim() !== '' && date.trim() !== '') {
             // Verifica se já existe uma tarefa com o mesmo nome
             const tarefaExistente = task.some((item, index) => 
@@ -62,29 +78,54 @@ function MainComponent() {
             const newItem = {
                 name: taskName,
                 cost: parseFloat(expense.replace(/\./g, "").replace(",", ".")),
-                limitDate: dayjs(date).format('DD/MM/YYYY')
+                limit_date: dayjs(date).format('DD/MM/YYYY')
             };
-            
-            if (edit !== null) {
-                const updatedTasks = [...task];
-                updatedTasks[edit] = newItem;
-                setTask(updatedTasks);
-            } else {
-                setTask([...task, newItem]);
+
+            try {
+                if (edit !== null) {
+                    await fetch(`${API_URL}/tasks/${task[edit].id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newItem)
+                    });
+                } else {
+                    await fetch(`${API_URL}/tasks`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newItem)
+                    });
+                }
+
+                fetchTasks();
+                closeModal();
+                setTaskName('');
+                setExpense('');
+                setDate('');
+                setEdit(null);
+            } catch (error) {
+                console.error("Erro ao salvar tarefa!", error);
             }
             
-            setTaskName('');
-            setExpense('');
-            setDate('');
-            setEdit(null);
-            closeModal();
-        } else {
-            setErrorMessage('Preencha todos os campos antes de adicionar.');
-            setTimeout(() => {
-                setErrorMessage('');
-            }, 5000);
+            // if (edit !== null) {
+            //     const updatedTasks = [...task];
+            //     updatedTasks[edit] = newItem;
+            //     setTask(updatedTasks);
+            // } else {
+            //     setTask([...task, newItem]);
+            // }
+            
+        //     setTaskName('');
+        //     setExpense('');
+        //     setDate('');
+        //     setEdit(null);
+        //     closeModal();
+        // } else {
+        //     setErrorMessage('Preencha todos os campos antes de adicionar.');
+        //     setTimeout(() => {
+        //         setErrorMessage('');
+        //     }, 5000);
         }
-    }, [taskName, expense, date, edit, closeModal, task]);
+    };
     
     // ----------------------------------------
     
@@ -100,7 +141,7 @@ function MainComponent() {
         });
         setExpense(formattedExpense);
 
-        const [dia, mes, ano] = tarefa.limitDate.split('/');
+        const [dia, mes, ano] = tarefa.limit_date.split('/');
         const formattedDate = dayjs(`${ano}-${mes}-${dia}`).format('YYYY-MM-DD');
         setDate(formattedDate);
         
@@ -140,16 +181,30 @@ function MainComponent() {
     // ----------------------------------------
 
     // Confirma se o usuário deseja excluir o item
-    const deleteTask = useCallback((index) => {
-        if (remove.current && itemToDelete !== null) {
-            const updatedTasks = [...task];
-            updatedTasks.splice(itemToDelete, 1);
-            setTask(updatedTasks);
-            closeRemoveModal();
-        };
-    }, [closeRemoveModal, task, itemToDelete]);
+    const deleteTask = async () => {
+        if (itemToDelete !== null) {
+            try {
+                await fetch(`${API_URL}/tasks/${task[itemToDelete].id}`, {
+                    method: 'DELETE'
+                });
+                fetchTasks();
+                closeRemoveModal();
+            } catch (error) {
+                console.error("Erro ao deletar tarefa!", error);
+            }
+        }
+    };
+    // const deleteTask = useCallback((index) => {
+    //     if (remove.current && itemToDelete !== null) {
+    //         const updatedTasks = [...task];
+    //         updatedTasks.splice(itemToDelete, 1);
+    //         setTask(updatedTasks);
+    //         closeRemoveModal();
+    //     };
+    // }, [closeRemoveModal, task, itemToDelete]);
 
     // ----------------------------------------
+
 
     return (
         <main className="container">
@@ -186,7 +241,7 @@ function MainComponent() {
 
                 <span className="task-expense">{formatBRL(tarefa.cost)}</span>
 
-                <div className="date"><span>{tarefa.limitDate}</span></div>
+                <div className="date"><span>{tarefa.limit_date}</span></div>
 
                 <div className="buttons">
                     <img src={`${process.env.PUBLIC_URL}/assets/edit.svg`} 
