@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
-import { ReactSortable } from "react-sortablejs";
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import '../styles/App.css';
 
 const API_URL = 'http://localhost:3333';
@@ -57,6 +57,42 @@ function MainComponent() {
             remove.current.close();
         };
     }, []);
+
+    const handleDragEnd = async (result) => {
+        if (!result.destination) return;
+    
+        const items = Array.from(task);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+    
+        const updatedList = items.map((item, index) => ({
+            ...item,
+            position: index + 1
+        }));
+    
+        setTask(updatedList);
+    
+        try {
+            const response = await fetch(`${API_URL}/tasks/reorder`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tasks: updatedList.map(item => ({
+                        id: item.id,
+                        position: item.position
+                    }))
+                })
+            });
+    
+            if (!response.ok) {
+                throw new Error("Erro ao reordenar tarefas!");
+            }
+        } catch (error) {
+            console.error("Erro ao reordenar tarefas!", error);
+            fetchTasks();
+        }
+    };
+
         
     // Adicionar Task
     const addTask = async () => {
@@ -104,26 +140,12 @@ function MainComponent() {
                 setEdit(null);
             } catch (error) {
                 console.error("Erro ao salvar tarefa!", error);
-            }
-            
-            // if (edit !== null) {
-            //     const updatedTasks = [...task];
-            //     updatedTasks[edit] = newItem;
-            //     setTask(updatedTasks);
-            // } else {
-            //     setTask([...task, newItem]);
-            // }
-            
-        //     setTaskName('');
-        //     setExpense('');
-        //     setDate('');
-        //     setEdit(null);
-        //     closeModal();
-        // } else {
-        //     setErrorMessage('Preencha todos os campos antes de adicionar.');
-        //     setTimeout(() => {
-        //         setErrorMessage('');
-        //     }, 5000);
+            };
+        } else {
+            setErrorMessage('Preencha todos os campos antes de adicionar.');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
         }
     };
     
@@ -194,24 +216,15 @@ function MainComponent() {
             }
         }
     };
-    // const deleteTask = useCallback((index) => {
-    //     if (remove.current && itemToDelete !== null) {
-    //         const updatedTasks = [...task];
-    //         updatedTasks.splice(itemToDelete, 1);
-    //         setTask(updatedTasks);
-    //         closeRemoveModal();
-    //     };
-    // }, [closeRemoveModal, task, itemToDelete]);
 
     // ----------------------------------------
-
 
     return (
         <main className="container">
 
             <div id="logo">
                 <img className="logo-img" src={`${process.env.PUBLIC_URL}/assets/logo.svg`} alt="" />
-                <h1>Little List</h1>
+                <h1>TaskList</h1>
             </div>
 
             <section className="registers">
@@ -224,44 +237,64 @@ function MainComponent() {
                 
         {/* Lista ordenada -> */}
 
-        <ReactSortable 
-            tag="ol"
-            list={task}
-            setList={setTask}
-            animation={200}
-            handle=".handle"
-            delay={150}
-            delayOnTouchOnly={true}
-            touchStartThreshold={5}
-        >
+        <DragDropContext onDragEnd={handleDragEnd}>
+    <Droppable droppableId="tasks">
+        {(provided) => (
+            <ol {...provided.droppableProps} ref={provided.innerRef}>
+                {task.map((tarefa, index) => (
+                    <Draggable 
+                        key={tarefa.id} 
+                        draggableId={tarefa.id.toString()} 
+                        index={index}
+                    >
+                        {(provided) => (
+                            <li
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                className={tarefa.cost >= 1000 ? "expensive-task" : ""}
+                            >
+                                <div className="task">
+                                    <strong>{tarefa.name}</strong>
+                                </div>
 
-        {task.map((tarefa, index) => (
-            <li key={index} className={tarefa.cost >= 1000 ? "expensive-task" : ""}>
-                <div className="task"><strong>{tarefa.name}</strong></div>
+                                <span className="task-expense">
+                                    {formatBRL(tarefa.cost)}
+                                </span>
 
-                <span className="task-expense">{formatBRL(tarefa.cost)}</span>
+                                <div className="date">
+                                    <span>{tarefa.limit_date}</span>
+                                </div>
 
-                <div className="date"><span>{tarefa.limit_date}</span></div>
+                                <div className="buttons">
+                                    <img 
+                                        src={`${process.env.PUBLIC_URL}/assets/edit.svg`}
+                                        className="edit-btn"
+                                        alt="editar"
+                                        onClick={() => editExistingTask(index)}
+                                    />
+                                    <img 
+                                        src={`${process.env.PUBLIC_URL}/assets/remove.svg`}
+                                        className="remove-btn"
+                                        alt="remover"
+                                        onClick={() => {
+                                            setItemToDelete(index);
+                                            remove.current?.showModal();
+                                        }}
+                                    />
+                                </div>
 
-                <div className="buttons">
-                    <img src={`${process.env.PUBLIC_URL}/assets/edit.svg`} 
-                        className="edit-btn" 
-                        alt="editar" 
-                        onClick={() => editExistingTask(index)} />
-                    <img src={`${process.env.PUBLIC_URL}/assets/remove.svg`} 
-                        className="remove-btn" 
-                        alt="remover"
-                        onClick={() => {
-                            setItemToDelete(index);
-                            remove.current?.showModal();
-                        }} 
-                    />
-                </div>
-
-                <div className='handle'>☰</div>
-            </li>
-        ))}
-        </ReactSortable>
+                                <div {...provided.dragHandleProps} className='handle'>
+                                    ☰
+                                </div>
+                            </li>
+                        )}
+                    </Draggable>
+                ))}
+                {provided.placeholder}
+            </ol>
+        )}
+    </Droppable>
+</DragDropContext>
 
             {/* ------------------------------ */}
 
