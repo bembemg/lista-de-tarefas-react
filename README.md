@@ -13,9 +13,7 @@
 
 
 
-## Credits
-
-This software uses the following open source packages:
+## Tecnologias utilizadas
 
 - [React](https://react.dev/)
 - [Node.js](https://nodejs.org/)
