@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&family=Roboto+Flex:opsz@8..144&display=swap');
+
+:root {
+  --bg-color: #F7F7F9;
+
+  --ff-family: 'Red Hat Text', sans-serif;
+  --text-header: 700 2rem/3rem var(--ff-family);
+  --text-taskname: 600 1.5rem/2rem var(--ff-family);
+  --text-expense: 400 1.25rem/2rem var(--ff-family);
+  --text-limitdate: 400 1.25rem/2rem var(--ff-family);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -13,16 +25,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #F2F2F2;
+  background-color: var(--bg-color);
 }
 
-#logo {
-  display: flex;
-  align-items: center;
-
-  & img {
-    width: 5rem;
-  }
+.registers {
+  background-color: #f3f3f3;
+  box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 20%);
+  border-radius: 16px;
+  height: 35rem;
+  overflow-y: scroll;
 }
 
 .task {
@@ -35,37 +46,12 @@ ol {
   list-style-type: none;
 }
 
-li {
-  display: flex;
-  border: 1px red solid;
-  align-items: center;
-  gap: 2rem;
-  justify-content: center;
-}
-
-li::before {
-  content: counter(item) ".";
-  counter-increment: item;
-  font-weight: bold;
-}
-
 .buttons {
   display: flex;
   gap: 0.5rem;
 }
 
-.edit-btn {
-  width: 1rem;
-  cursor: pointer;
-}
-
-.remove-btn {
-  width: 1rem;
-  cursor: pointer;
-}
-
 .tasks-header {
-  border: 2px blue solid;
   display: flex;
   padding-inline: 5rem;
   gap: 5rem;
@@ -114,13 +100,4 @@ li::before {
 
 .sortable-drag {
   opacity: 0;
-}
-
-.expensive-task {
-  background-color: #fff3cd;
-  transition: background-color 0.3s ease;
-}
-
-.expensive-task:hover {
-  background-color: #ffe7b3;
 }

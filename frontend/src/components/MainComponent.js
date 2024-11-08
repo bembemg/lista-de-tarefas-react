@@ -224,7 +224,6 @@ function MainComponent() {
 
             <div id="logo">
                 <img className="logo-img" src={`${process.env.PUBLIC_URL}/assets/logo.svg`} alt="" />
-                <h1>TaskList</h1>
             </div>
 
             <section className="registers">
@@ -252,9 +251,10 @@ function MainComponent() {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 className={tarefa.cost >= 1000 ? "expensive-task" : ""}
+                                id="task-container"
                             >
                                 <div className="task">
-                                    <strong>{tarefa.name}</strong>
+                                    <p>{tarefa.name}</p>
                                 </div>
 
                                 <span className="task-expense">
@@ -296,6 +296,8 @@ function MainComponent() {
     </Droppable>
 </DragDropContext>
 
+        </section>
+        
             {/* ------------------------------ */}
 
             {/* Botão de incluir item a lista de tarefas -> */}
@@ -340,7 +342,6 @@ function MainComponent() {
                 <img src={`${process.env.PUBLIC_URL}/assets/remove.svg`} alt="cancelar" 
                     onClick={closeRemoveModal}/>
             </dialog>
-            </section>
     </main>
     );
 };

@@ -1,0 +1,8 @@
+.tasks-header {
+    font: var(--text-header);
+    color: #2b2d42;
+    border-bottom: 1px dashed #2b2d42;
+
+    align-items: center;
+    gap: 6rem;
+}
