@@ -23,12 +23,6 @@
     box-shadow: 0 0 20px #00ff9d7c;  
 }
 
-.cancel-btn {
-    position: fixed;
-    cursor: pointer;
-    width: 2rem;
-}
-
 #add {
     width: 30rem;
     height: 35rem;
@@ -70,6 +64,20 @@
     }
 }
 
+.dialog-header {
+    position: relative;
+    font: var(--text-sm);
+    display: flex;
+    justify-content: center;
+}
+
+.cancel-btn {
+    position: absolute;
+    left: 1px;
+    cursor: pointer;
+    width: 2rem;
+}
+
 .error-message {
     background-color: #ff0000;
     width: 100%;
@@ -95,7 +103,7 @@
 #btn-add {
     font: var(--text-lg);
     position: fixed;
-    bottom: 2.5rem;
+    bottom: 1.5rem;
     width: 27.5rem;
     height: 5rem;
     justify-content: center;
@@ -123,7 +131,7 @@
 
     #add {
         width: 25rem;
-        height: 30rem;
+        height: 32rem;
     }
 
     #btn-add {

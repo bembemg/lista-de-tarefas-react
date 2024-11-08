@@ -312,13 +312,18 @@ function MainComponent() {
             {/* ------------------------------ */}
 
             {/* Botão de incluir item a lista de tarefas -> */}
+            <div id="btn-container">
             <button id="btn-include" onClick={showModal}>Incluir</button>
+            </div>
 
             {/* dialog para adicionar novo item a lista -> */}
             <dialog id="add" ref={modal}>
 
+                <div className="dialog-header">
                 <img src={`${process.env.PUBLIC_URL}/assets/remove.svg`} 
                 className="cancel-btn" onClick={closeModal} alt="cancelar"/>
+                <h2>{edit !== null ? "Salvar Tarefa" : "Adicionar Tarefa"}</h2>
+                </div>
 
                 <div className="add-dialog">
                 <p>Nome da Tarefa</p>
