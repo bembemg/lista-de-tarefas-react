@@ -112,6 +112,6 @@ app.delete('/tasks/:id', (req, res) => {
 });
 
 // Iniciar o servidor
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });

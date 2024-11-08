@@ -1,8 +1,44 @@
 .tasks-header {
-    font: var(--text-header);
-    color: #2b2d42;
-    border-bottom: 1px dashed #2b2d42;
+    display: flex;
+    padding-inline: 3rem;
+
+    background-color: var(--bg-register-color);
+    border-radius: 16px 16px 0 0;
+    font: var(--text-xl);
+    color: var(--spacecadet-color);
+    border-bottom: 1px dashed var(--spacecadet-color);
 
     align-items: center;
-    gap: 6rem;
+
+    & span:nth-child(1) {
+        margin-right: auto;
+    }
+
+    & span:nth-child(2) {
+        margin-right: auto;
+        margin-left: 8rem;
+    }
+
+    & span:nth-child(3) {
+        margin-right: auto;
+    }
+}
+
+@media (width < 80rem) {
+    .tasks-header {
+        white-space: nowrap;
+    }
+
+    & span:nth-child(1) {
+        margin-right: auto;
+    }
+
+    & span:nth-child(2) {
+        display: none;
+    }
+
+    & span:nth-child(3) {
+        margin-right: auto;
+        margin-left: 2rem;
+    }
 }

@@ -4,69 +4,129 @@
     width: 90%;
     justify-self: center;
     height: 4rem;
-    background-color: #f7e733a9;
+    background-color: #fff3cd;
+
+    transition: background-color 0.3s;
 }
 
+#task-container:hover {
+    background-color: #ffe7b3;
+}
+
+ol {
+    counter-reset: item;
+    list-style-type: none;
+}
 li {
     display: flex;
     align-items: center;
-    gap: 2rem;
     justify-content: center;
+    gap: .5rem;
+    padding-inline: 1rem;
 }
 
 li::before {
     content: counter(item) ".";
     counter-increment: item;
-    font: var(--text-taskname);
-    color: #2B2D42;
+    font: var(--text-lg);
+    color: var(--spacecadet-color);
 }
 
 .task {
-    font: var(--text-taskname);
-    color: #2B2D42;
+    font: var(--text-lg);
+    color: var(--spacecadet-color);
+    width: 20rem;
+
+    /* border: 1px solid red; */
+    position: relative;
+    margin-right: auto;
 }
 
 .task-expense {
-    font: var(--text-expense);
-    color: #2B2D42;
+    font: var(--text-md);
+    color: var(--spacecadet-color);
+
+    width: 12.5rem;
+    margin-right: auto;
+
+    /* border: 1px solid red; */
 }
 
 .date {
-    font: var(--text-limitdate);
-    color: #2B2D42;
+    font: var(--text-sm);
+    color: var(--spacecadet-color);
+
+    margin-right: 2rem;
+
+    /* border: 1px solid red; */
 }
 
 .buttons {
+    display: flex;
     align-items: center;
+    gap: .5rem;
 
     & .edit-btn {
-        /* border: 1px solid #2B2D42; */
         width: 1.5rem;
         cursor: pointer;
     }
     
     & .remove-btn {
-        /* border: 1px solid #2B2D42; */
-        width: 1.5rem;
+        width: 2rem;
         cursor: pointer;
+        margin-top: .1rem;
     }
 }
 
 .expensive-task {
-    background-color: #fff3cd;
+    background-color: #f7e733a9 !important;
+
     transition: background-color 0.3s ease;
 }
 
 .expensive-task:hover {
-    background-color: #ffe7b3;
+    background-color: #ffea00cc !important;
 }
 
-#btn-include {
-    background-color: #41E2BA;
-    margin-top: 1rem;
-    margin-left: auto;
-    border: none;
-    border-radius: 12px;
-    width: 10rem;
-    height: 3rem;
+
+@media (width < 80rem) {
+
+    li {
+        width: 5rem;
+    }
+
+    li::before {
+        content: none;
+    }
+    .task {
+        /* border: 1px solid var(--spacecadet-color); */
+        width: 9rem;
+        max-width: 9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .task-expense {
+        display: none;
+    }
+
+    .date {
+        /* border: 1px solid var(--spacecadet-color); */
+        margin-right: auto;
+    }
+
+    .buttons {
+        gap: .25rem;
+    
+        & .edit-btn {
+            width: 1rem;
+            cursor: pointer;
+        }
+        
+        & .remove-btn {
+            width: 1.5rem;
+            cursor: pointer;
+        }
+    }
 }

@@ -1,0 +1,87 @@
+#remove {
+    height: 11rem;
+    border-radius: 16px;
+    background-color: var(--bg-register-color);
+    outline: none;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.349);
+
+    & h2 {
+        font: var(--text-lg);
+    }    
+
+}
+
+#remove-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 4rem;
+    cursor: pointer;
+
+    & p {
+        font: var(--text-md);
+    }
+    
+    & img:nth-child(2) {
+        width: 3rem;
+    }
+    
+    & img:nth-child(4) {
+        width: 3.5rem;
+    }
+}
+
+.remove-confirm {
+    display: flex;
+    justify-content: center;
+    padding-left: .75rem;
+    align-items: center;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    width: 7rem;
+    height: 4rem;
+    
+    transition: border-color 0.6s, box-shadow 0.6s;
+}
+
+.remove-confirm:hover {
+    border-color: #00ff9d;
+    box-shadow: 0 0 20px #00ff9d7c;  
+}
+
+.remove-cancel {
+    display: flex;
+    justify-content: center;
+    padding-left: 1rem;
+    align-items: center;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    width: 7rem;
+    height: 4rem;
+
+    transition: border-color 0.6s, box-shadow 0.6s;
+}
+
+.remove-cancel:hover {
+    border-color: #ff0000;
+    box-shadow: 0 0 20px #ff00007c;  
+}
+
+@media  (width < 80rem) {
+    #remove {
+        height: 8rem;
+        white-space: nowrap;
+    }
+    
+    #remove-buttons {
+        margin-top: .5rem;
+    }
+
+    .remove-confirm {
+        height: 3rem;
+    }
+
+    .remove-cancel {
+        height: 3rem;
+    }
+}

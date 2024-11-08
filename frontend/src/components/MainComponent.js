@@ -32,6 +32,7 @@ function MainComponent() {
     const [itemToDelete, setItemToDelete] = useState(null);
     // Variável para mensagem de erro
     const [errorMessage, setErrorMessage] = useState('');
+    const [errorClass, setErrorClass] = useState('');
 
     // Abrir dialog para adicionar item a lista
     const modal = useRef();
@@ -93,6 +94,21 @@ function MainComponent() {
         }
     };
 
+    // Mensagem de erro
+    const showError = (message) => { 
+        setErrorMessage(message); 
+        setTimeout(() => { 
+            setErrorClass('fade-in');
+            setTimeout(() => { 
+                setErrorClass('fade-out'); 
+                setTimeout(() => {
+                    setErrorMessage('');
+                    setErrorClass('');
+                    }, 1000);
+                    }, 4000);
+                }, 0);
+            };
+
         
     // Adicionar Task
     const addTask = async () => {
@@ -104,10 +120,7 @@ function MainComponent() {
             );
     
             if (tarefaExistente) {
-                setErrorMessage('Já existe uma tarefa com este nome!');
-                setTimeout(() => {
-                    setErrorMessage('');
-                }, 5000);
+                showError('Já existe uma tarefa com esse nome.'); 
                 return;
             }
     
@@ -142,10 +155,8 @@ function MainComponent() {
                 console.error("Erro ao salvar tarefa!", error);
             };
         } else {
-            setErrorMessage('Preencha todos os campos antes de adicionar.');
-            setTimeout(() => {
-                setErrorMessage('');
-            }, 5000);
+            showError('Preencha todos os campos antes de adicionar.'); 
+            return;
         }
     };
     
@@ -226,13 +237,13 @@ function MainComponent() {
                 <img className="logo-img" src={`${process.env.PUBLIC_URL}/assets/logo.svg`} alt="" />
             </div>
 
-            <section className="registers">
-
                 <header className="tasks-header">
                     <span>Tarefa</span>
                     <span>Custo</span>
                     <span>Data Limite</span>
                 </header>
+            <section className="registers">
+
                 
         {/* Lista ordenada -> */}
 
@@ -250,8 +261,8 @@ function MainComponent() {
                             <li
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className={tarefa.cost >= 1000 ? "expensive-task" : ""}
                                 id="task-container"
+                                className={tarefa.cost >= 1000 ? "expensive-task" : ""}
                             >
                                 <div className="task">
                                     <p>{tarefa.name}</p>
@@ -297,7 +308,7 @@ function MainComponent() {
 </DragDropContext>
 
         </section>
-        
+
             {/* ------------------------------ */}
 
             {/* Botão de incluir item a lista de tarefas -> */}
@@ -307,24 +318,29 @@ function MainComponent() {
             <dialog id="add" ref={modal}>
 
                 <img src={`${process.env.PUBLIC_URL}/assets/remove.svg`} 
-                className="remove-btn" onClick={closeModal} alt="cancelar"/>
+                className="cancel-btn" onClick={closeModal} alt="cancelar"/>
 
+                <div className="add-dialog">
+                <p>Nome da Tarefa</p>
                 <input type="text" placeholder="Nome da Tarefa" className="add-task" 
                 value={taskName}
                 onChange={(event) =>
                     setTaskName(event.target.value)
                 }/>
 
+                <p>Custo</p>
                 <input type="text" placeholder="R$ 0,00" className="add-expense"
                     value={expense}
                     onChange={handleExpenseChange}/>
 
+                <p>Data Limite</p>
                 <input type="date" className="add-date" maxLength="10"
                 value={date}
                 onChange={handleLimitDateChange}/>
+                </div>
 
                 {errorMessage && (
-                    <div className="error-message">
+                    <div className={`error-message ${errorClass}`}>
                         {errorMessage}
                     </div>
                 )}
@@ -336,11 +352,19 @@ function MainComponent() {
 
             {/* dialog de confirmação de exclusão de item */}
             <dialog id="remove" ref={remove}>
-                <p>Tem certeza que deseja excluir este item?</p>
-                <img src={`${process.env.PUBLIC_URL}/assets/confirm.svg`} alt="confirmar"
-                    onClick={deleteTask}/>
-                <img src={`${process.env.PUBLIC_URL}/assets/remove.svg`} alt="cancelar" 
-                    onClick={closeRemoveModal}/>
+                <h2>Tem certeza que deseja excluir este item?</h2>
+
+                <div id="remove-buttons">
+                    <div className="remove-confirm" onClick={deleteTask}>
+                        <p>Sim</p>
+                        <img src={`${process.env.PUBLIC_URL}/assets/confirm.svg`} alt="confirmar"/>
+                    </div>
+
+                    <div className="remove-cancel" onClick={closeRemoveModal}>
+                    <p>Não</p>
+                    <img src={`${process.env.PUBLIC_URL}/assets/remove.svg`} alt="cancelar" />
+                    </div>
+                </div>
             </dialog>
     </main>
     );

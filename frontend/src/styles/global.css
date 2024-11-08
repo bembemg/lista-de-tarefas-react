@@ -2,12 +2,15 @@
 
 :root {
   --bg-color: #F7F7F9;
+  --bg-register-color: #f3f3f3;
+  --spacecadet-color: #2b2d42;
+  --button-color: #41E2BA;
 
   --ff-family: 'Red Hat Text', sans-serif;
-  --text-header: 700 2rem/3rem var(--ff-family);
-  --text-taskname: 600 1.5rem/2rem var(--ff-family);
-  --text-expense: 400 1.25rem/2rem var(--ff-family);
-  --text-limitdate: 400 1.25rem/2rem var(--ff-family);
+  --text-xl: 700 2rem/3rem var(--ff-family);
+  --text-lg: 600 1.5rem/2rem var(--ff-family);
+  --text-md: 400 1.25rem/2rem var(--ff-family);
+  --text-sm: 400 1.25rem/2rem var(--ff-family);
 }
 
 * {
@@ -29,32 +32,31 @@ body {
 }
 
 .registers {
-  background-color: #f3f3f3;
+  background-color: var(--bg-register-color);
   box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 20%);
-  border-radius: 16px;
+  border-radius: 0px 0px 16px 16px;
+  width: 51.9rem;
   height: 35rem;
   overflow-y: scroll;
+  padding-bottom: 1rem;
 }
 
-.task {
-  display: flex;
-  align-items: center;
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-ol {
-  counter-reset: item;
-  list-style-type: none;
+::-webkit-scrollbar-track {
+  border-radius: 16px;
 }
 
-.buttons {
-  display: flex;
-  gap: 0.5rem;
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+  border: 2px solid #f1f1f1;
 }
 
-.tasks-header {
-  display: flex;
-  padding-inline: 5rem;
-  gap: 5rem;
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
 #add {
@@ -87,17 +89,40 @@ ol {
 .handle {
   cursor: grab;
   padding: 5px;
-  color: #666;
+  color: var(--spacecadet-color);
+  text-align: center;
 }
 
 .handle:active {
   cursor: grabbing;
 }
 
-.sortable-chosen {
-  background-color: #f5f5f5;
-}
+@media (width < 80rem) {
+  :root {
+    --ff-family: 'Red Hat Text', sans-serif;
+    --text-xl: 700 1rem/3rem var(--ff-family);
+    --text-lg: 600 1rem/2rem var(--ff-family);
+    --text-md: 400 .75rem/2rem var(--ff-family);
+    --text-sm: 400 .75rem/2rem var(--ff-family);
+  }
 
-.sortable-drag {
-  opacity: 0;
+  .container {
+    max-width: 25.5rem;
+  }
+
+  .registers {
+    width: auto;
+  }
+
+  .handle {
+    padding: 0;
+  }
+
+  #add {
+    top: 40%;
+  }
+
+  #remove {
+    top: 40%;
+  }
 }
