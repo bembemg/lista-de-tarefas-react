@@ -1,5 +1,6 @@
 <h1 align="center">TaskList.com</h4>
 
+<h4>Página Web feita para um teste de um estágio.</h4>
 <br>
 
 ![image](https://github.com/user-attachments/assets/5868fff4-e314-4a11-8fa6-cd0efa160b84)
